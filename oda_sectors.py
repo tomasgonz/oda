@@ -53,7 +53,7 @@ if selected_recipient:
 
 st.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
 
-This app is baed on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
+This app is based on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
 
 st.title("Aid (ODA) by sector and donor")
 
