@@ -37,9 +37,17 @@ all_donors = np.append(all_donors, "all donors")
 
 selected_donor = st.sidebar.selectbox('Donor', all_donors)
 
+all_recipients = np.insert(all_recipients, 0, "all recipients")
+
+selected_recipient = st.sidebar.selectbox('Recipient', all_recipients)
+
 if selected_donor:
     if selected_donor != "all donors":
         data = data[data['Donor'].isin([selected_donor])]
+
+if selected_recipient:
+    if selected_recipient != "all recipients":
+        data = data[data['Recipient'] == selected_recipient]
 
 # Data definitions and header
 
@@ -53,6 +61,10 @@ st.write(""" Official Development Assistance (ODA) is defined as those flows to 
 
 OECD (2022), "Data warehouse", OECD.Stat (database), https://doi.org/10.1787/data-00900-en (accessed on 12 October 2022). """
 )
+
+if data.empty:
+    st.write("There is no data reflecting flows from " + selected_donor + " to " + selected_recipient)
+    st.stop()
 
 # 2020 - Sectors
 data_donors_sectors_2020 = data[data['Year'] == 2020]
@@ -68,7 +80,7 @@ index_destination = []
 for e in data_donors_sectors_2020['Sector'].values.tolist():
     index_destination.append(labels.index(e))
 
-st.header("How has the sectoral allocation of " + selected_donor + " evolved between 2011 and 2020?")
+st.header("How has the sectoral allocation of " + selected_donor + " to " + selected_recipient + " evolved between 2011 and 2020?")
 
 
 da = data.groupby(['Year','Sector'], as_index = False)['Value'].sum()[['Sector', 'Year', 'Value']].sort_values(by=['Year', 'Value'], ascending = False)
@@ -96,7 +108,7 @@ st.vega_lite_chart(da, {
     },
 }, use_container_width=True, height=800)
 
-st.header("How is " + selected_donor + " allocating its aid by sector in 2020?")
+st.header("How is " + selected_donor + " allocating its aid to " + selected_recipient + " by sector in 2020?")
 fig = go.Figure(data=[go.Sankey(
     node = {
         'pad' : 15,
@@ -122,49 +134,51 @@ sorted_data_donors_sector_2020 = data_donors_sectors_2020[['Donor', 'Sector', "V
 
 st.dataframe(sorted_data_donors_sector_2020, use_container_width=True)
 
-st.header("Where is " + selected_donor + " sending its aid in 2020?")
+if selected_recipient == "all recipients":
 
-# 2020
-data_donors_recipient_2020 = data[data['Year'] == 2020]
-data_donors_recipient_2020 = data_donors_recipient_2020.groupby(['Donor', 'Recipient'], as_index = False).sum()
+    st.header("Where is " + selected_donor + " sending its aid in 2020?")
 
-labels =  data_donors_recipient_2020['Donor'].unique().tolist() + all_recipients.tolist()
+    # 2020
+    data_donors_recipient_2020 = data[data['Year'] == 2020]
+    data_donors_recipient_2020 = data_donors_recipient_2020.groupby(['Donor', 'Recipient'], as_index = False).sum()
 
-index_source = []
-for e in data_donors_recipient_2020['Donor'].values.tolist():
-    index_source.append(labels.index(e))
+    labels =  data_donors_recipient_2020['Donor'].unique().tolist() + all_recipients.tolist()
 
-index_destination = []
-for e in data_donors_recipient_2020['Recipient'].values.tolist():
-    index_destination.append(labels.index(e))
+    index_source = []
+    for e in data_donors_recipient_2020['Donor'].values.tolist():
+        index_source.append(labels.index(e))
 
-fig = go.Figure(data=[go.Sankey(
-    node = {
-        'pad' : 15,
-        'thickness' : 20,
-        'line' : {
-            'color' : 'black', 
-            'width' : 0.5
+    index_destination = []
+    for e in data_donors_recipient_2020['Recipient'].values.tolist():
+        index_destination.append(labels.index(e))
+
+    fig = go.Figure(data=[go.Sankey(
+        node = {
+            'pad' : 15,
+            'thickness' : 20,
+            'line' : {
+                'color' : 'black', 
+                'width' : 0.5
+            },
+            'label' :labels
         },
-        'label' :labels
-    },
-    link = {
-        'source' : index_source,
-        'target' : index_destination,
-        'value' : data_donors_recipient_2020['Value']
-    }
-)])
+        link = {
+            'source' : index_source,
+            'target' : index_destination,
+            'value' : data_donors_recipient_2020['Value']
+        }
+    )])
 
-fig.update_layout(height=1500)
-st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
+    fig.update_layout(height=1500)
+    st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
 
-st.header("Top recipients of " + selected_donor + " in 2020")
+    st.header("Top recipients of " + selected_donor + " in 2020")
 
-sorted_data_donors_recipient_2020 = data_donors_recipient_2020[['Donor', 'Recipient', 'Value']].sort_values(by=['Value'], ascending=False)
+    sorted_data_donors_recipient_2020 = data_donors_recipient_2020[['Donor', 'Recipient', 'Value']].sort_values(by=['Value'], ascending=False)
 
-st.dataframe(sorted_data_donors_recipient_2020, use_container_width=True)
+    st.dataframe(sorted_data_donors_recipient_2020, use_container_width=True)
 
-st.header("How have the trends of recipients of aid by " + selected_donor + " evolved from 2010 to 2020?")
+st.header("How have the trends of recipients of aid by " + selected_donor + " to " + selected_recipient + " evolved from 2010 to 2020?")
 
 st.vega_lite_chart(data, {
     'mark': {'type': 'line', 'tooltip': True, "interpolate": "monotone", "point": "True"},
