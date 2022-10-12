@@ -41,6 +41,19 @@ if selected_donor:
     if selected_donor != "all donors":
         data = data[data['Donor'].isin([selected_donor])]
 
+# Data definitions and header
+
+st.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
+
+This app is baed on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
+
+st.title("Aid (ODA) by sector and donor")
+
+st.write(""" Official Development Assistance (ODA) is defined as those flows to developing countries and multilateral institutions provided by official agencies, including state and local governments, or by their executive agencies, each transaction of which meets the following tests: i) it is administered with the promotion of the economic development and welfare of developing countries as its main objective; and ii) it is concessional in character and conveys a grant element of at least 25 per cent. The data is in current US. 
+
+OECD (2022), "Data warehouse", OECD.Stat (database), https://doi.org/10.1787/data-00900-en (accessed on 12 October 2022). """
+)
+
 # 2020 - Sectors
 data_donors_sectors_2020 = data[data['Year'] == 2020]
 data_donors_sectors_2020 = data.groupby(['Donor', 'Sector'], as_index = False).sum()
