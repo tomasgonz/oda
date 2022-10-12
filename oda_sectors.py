@@ -134,7 +134,7 @@ sorted_data_donors_sector_2020 = data_donors_sectors_2020[['Donor', 'Sector', "V
 
 st.dataframe(sorted_data_donors_sector_2020, use_container_width=True)
 
-if selected_recipient == "all recipients":
+if selected_recipient == "all recipients" and selected_donor != "all donors":
 
     st.header("Where is " + selected_donor + " sending its aid in 2020?")
 
