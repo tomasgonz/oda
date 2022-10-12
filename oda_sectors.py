@@ -33,7 +33,7 @@ all_sectors = data['Sector'].unique()
 all_donors = data['Donor'].unique()
 all_recipients = data['Recipient'].unique()
 
-all_donors = np.insert(all_donors, 0, "all donors")
+all_donors = np.append(all_donors, "all donors")
 
 selected_donor = st.sidebar.selectbox('Donor', all_donors)
 
