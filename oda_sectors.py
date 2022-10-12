@@ -126,7 +126,7 @@ st.header("Where is " + selected_donor + " sending its aid in 2020?")
 
 # 2020
 data_donors_recipient_2020 = data[data['Year'] == 2020]
-data_donors_recipient_2020 = data.groupby(['Donor', 'Recipient'], as_index = False).sum()
+data_donors_recipient_2020 = data_donors_recipient_2020.groupby(['Donor', 'Recipient'], as_index = False).sum()
 
 labels =  data_donors_recipient_2020['Donor'].unique().tolist() + all_recipients.tolist()
 
