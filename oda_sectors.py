@@ -56,7 +56,7 @@ OECD (2022), "Data warehouse", OECD.Stat (database), https://doi.org/10.1787/dat
 
 # 2020 - Sectors
 data_donors_sectors_2020 = data[data['Year'] == 2020]
-data_donors_sectors_2020 = data.groupby(['Donor', 'Sector'], as_index = False).sum()
+data_donors_sectors_2020 = data_donors_sectors_2020.groupby(['Donor', 'Sector', 'Year'], as_index = False)['Value'].sum()
 
 labels = data_donors_sectors_2020['Donor'].unique().tolist() + all_sectors.tolist()
 
@@ -70,7 +70,8 @@ for e in data_donors_sectors_2020['Sector'].values.tolist():
 
 st.header("How has the sectoral allocation of " + selected_donor + " evolved between 2011 and 2020?")
 
-da = data.groupby(['Year','Sector'], as_index = False).sum()[['Sector', 'Year', 'Value']].sort_values(by=['Year', 'Value'], ascending = False)
+
+da = data.groupby(['Year','Sector'], as_index = False)['Value'].sum()[['Sector', 'Year', 'Value']].sort_values(by=['Year', 'Value'], ascending = False)
 
 col1, col2, col3, col4 = st.columns(4)
 
