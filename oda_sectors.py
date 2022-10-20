@@ -10,6 +10,7 @@ import numpy as np
 import altair as alt
 import plotly.graph_objects as go
 import random
+from paises.countries import Countries
 
 data = pd.DataFrame()
 
