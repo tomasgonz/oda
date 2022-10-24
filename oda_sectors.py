@@ -12,6 +12,9 @@ import plotly.graph_objects as go
 import random
 from paises.countries import Countries
 
+c = Countries()
+c.load_wb()
+
 data = pd.DataFrame()
 
 data = pd.read_csv(os.path.join(os.path.dirname(__file__), "oda_by_sector.csv"))
