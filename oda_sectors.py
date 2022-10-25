@@ -1,9 +1,7 @@
 import colorsys
 from re import S
-import sys
 import os
 from webbrowser import get
-sys.path.append("../")
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -11,6 +9,7 @@ import altair as alt
 import plotly.graph_objects as go
 import random
 from paises.countries import Countries
+import importlib
 
 c = Countries()
 c.load_wb()
