@@ -8,17 +8,20 @@ import numpy as np
 import altair as alt
 import plotly.graph_objects as go
 import random
-from paises.countries import Countries
+from paises import Countries
+from paises import Groups
 import importlib
 
 c = Countries()
 c.load_wb()
 
+g = Groups()
+
 data = pd.DataFrame()
 
 data = pd.read_csv(os.path.join(os.path.dirname(__file__), "oda_by_sector.csv"))
 
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 
 sectors = [110, 140, 230, 215, 310, 320, 330, 520, 600, 700]
 
@@ -43,6 +46,9 @@ selected_donor = st.sidebar.selectbox('Donor', all_donors)
 all_recipients = np.insert(all_recipients, 0, "all recipients")
 
 selected_recipient = st.sidebar.selectbox('Recipient', all_recipients)
+
+all_groups = g.names
+selected_group = st.sidebar.selectbox('Group', all_groups)
 
 if selected_donor:
     if selected_donor != "all donors":

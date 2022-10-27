@@ -11,8 +11,8 @@ streamlit = "^1.13.0"
 pandas = "^1.5.0"
 numpy = "^1.23.3"
 plotly = "^5.10.0"
-paises = ">=0.1"
-
+# paises = ">=0.2"
+paises = { path = "../paises/", develop = true }
 
 [build-system]
 requires = ["poetry-core"]
