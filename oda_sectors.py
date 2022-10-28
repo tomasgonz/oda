@@ -13,6 +13,8 @@ from paises import Groups
 import urllib
 import importlib
 
+@st.cache(ttl=24*60*60)
+
 st.set_page_config(layout="wide")
 
 def check_if_file_exists(file_name):
