@@ -9,13 +9,15 @@ import altair as alt
 import plotly.graph_objects as go
 import random
 from paises import Countries
-#from paises import Groups
+from paises import Groups
 import urllib
 import importlib
 
+st.set_page_config(layout="wide")
+
 def check_if_file_exists(file_name):
     if os.path.isfile(file_name):
-        st.write("File exists lcoally. No need to download it again.")
+        st.write("File exists locally. No need to download it again.")
         return True
     else:
         download_file()
@@ -37,8 +39,6 @@ g = Groups()
 data = pd.DataFrame()
 
 data = pd.read_csv(os.path.join(os.path.dirname(__file__), "oda_by_sector.csv"))
-
-st.set_page_config(layout="wide")
 
 sectors = [110, 140, 230, 215, 310, 320, 330, 400, 520, 600, 700, 998]
 
@@ -66,8 +66,8 @@ all_recipients = np.insert(all_recipients, 0, "all recipients")
 
 selected_recipient = st.sidebar.selectbox('Recipient', all_recipients)
 
-#all_groups = g.names
-#selected_group = st.sidebar.selectbox('Group', all_groups)
+all_groups = g.names
+selected_group = st.sidebar.selectbox('Group', all_groups)
 
 if selected_donor:
     if selected_donor != "all donors":
