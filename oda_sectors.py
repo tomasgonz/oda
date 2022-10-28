@@ -21,9 +21,11 @@ data = pd.DataFrame()
 
 data = pd.read_csv(os.path.join(os.path.dirname(__file__), "oda_by_sector.csv"))
 
-# st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
-sectors = [110, 140, 230, 215, 310, 320, 330, 520, 600, 700]
+sectors = [110, 140, 230, 215, 310, 320, 330, 400, 520, 600, 700, 998]
+
+data['Sector'].unique()
 
 years = data['Year'].unique()
 
@@ -33,7 +35,7 @@ data = data[data['Donor'] != 'DAC Countries, Total']
 
 data = data[~data['Recipient'].str.contains('Total')]
 data = data[~data['Recipient'].str.contains('regional')]
-data = data[~data['Recipient'].str.contains('unspecified')]
+# data = data[~data['Recipient'].str.contains('unspecified')]
 
 all_sectors = data['Sector'].unique()
 all_donors = data['Donor'].unique()
@@ -96,17 +98,17 @@ da = data.groupby(['Year','Sector'], as_index = False)['Value'].sum()[['Sector',
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(label='Largest sector in 2011', value=da[da['Year'] == 2011].iloc[0]['Sector'])
-col2.metric(label='Largest sector in 2011', value=da[da['Year'] == 2011].iloc[0]['Value'])
-col3.metric(label='Largest sector in 2020', value=da[da['Year'] == 2020].iloc[0]['Sector'])
-col4.metric(label='Largest sector in 2020', value=da[da['Year'] == 2020].iloc[0]['Value'])
+#col1.metric(label='Largest sector in 2011', value=da[da['Year'] == 2011].iloc[0]['Sector'])
+#col2.metric(label='Largest sector in 2011', value=da[da['Year'] == 2011].iloc[0]['Value'])
+#col3.metric(label='Largest sector in 2020', value=da[da['Year'] == 2020].iloc[0]['Sector'])
+#col4.metric(label='Largest sector in 2020', value=da[da['Year'] == 2020].iloc[0]['Value'])
 
 change_2011_2020 = da[da['Year'] == 2011]['Value'].sum().round(2) / da[da['Year'] == 2020]['Value'].sum().round(2)
 
-col1.metric(label='Volume of aid in current US in 2011', value=da[da['Year'] == 2011]['Value'].sum().round(2))
-col2.metric(label='Volume of aid in current US in 2020', value=da[da['Year'] == 2020]['Value'].sum().round(2))
+#col1.metric(label='Volume of aid in current US in 2011', value=da[da['Year'] == 2011]['Value'].sum().round(2))
+#col2.metric(label='Volume of aid in current US in 2020', value=da[da['Year'] == 2020]['Value'].sum().round(2))
 
-col3.metric(label="Change", value = "{:.2f}%".format((1 - change_2011_2020) * 100))
+#col3.metric(label="Change", value = "{:.2f}%".format((1 - change_2011_2020) * 100))
 
 st.vega_lite_chart(da, {
     'mark': {'type': 'line', 'tooltip': True, "interpolate": "monotone", "point": "True"},
