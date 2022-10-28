@@ -9,8 +9,25 @@ import altair as alt
 import plotly.graph_objects as go
 import random
 from paises import Countries
-from paises import Groups
+#from paises import Groups
+import urllib
 import importlib
+
+def check_if_file_exists(file_name):
+    if os.path.isfile(file_name):
+        st.write("File exists lcoally. No need to download it again.")
+        return True
+    else:
+        download_file()
+        return False
+
+def download_file():
+    st.write("Downloading data. Please, be patient... it is a lot of data...")
+    url = "https://datasource.nyc3.digitaloceanspaces.com/oecd_table2a_data.csv"
+    
+    urllib.request.urlretrieve(url, "oecd_table2a_data.csv")
+
+check_if_file_exists("oecd_table2a_data.csv")
 
 c = Countries()
 c.load_wb()
@@ -49,8 +66,8 @@ all_recipients = np.insert(all_recipients, 0, "all recipients")
 
 selected_recipient = st.sidebar.selectbox('Recipient', all_recipients)
 
-all_groups = g.names
-selected_group = st.sidebar.selectbox('Group', all_groups)
+#all_groups = g.names
+#selected_group = st.sidebar.selectbox('Group', all_groups)
 
 if selected_donor:
     if selected_donor != "all donors":
