@@ -85,6 +85,7 @@ st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
 st.dataframe(data[['Donor', 'Recipient', 'Value']], use_container_width=True)
 
 st.header("How is " + selected_donor + " allocating its aid by country?")
+st.write("The same as above, but excluding country group aggregates and showing only individual countries. Note that for some countries a substantial volume of aid is reported as unspecified.")
 
 data = data[~data['Recipient'].str.contains('Total')]
 data = data[~data['Recipient'].str.contains('regional')]
@@ -92,6 +93,7 @@ data = data[~data['Recipient'].str.contains('WorldBank')]
 data = data[~data['Recipient'].str.contains('World Bank')]
 data = data[~data['Recipient'].str.contains('World Bank')]
 data = data[~data['Recipient'].str.contains('Part')]
+data = data[~data['Recipient'].str.contains('unspecified')]
 
 # 2020
 data = data[data['Year'] == 2019].groupby(['Donor', 'Recipient'], as_index = False).sum()
@@ -100,9 +102,6 @@ data.sort_values(by=['Value'], inplace=True, ascending=False)
 labels = data['Recipient'].unique().tolist()
 
 parents = [selected_donor] * len(labels)
-
-st.header("How is " + selected_donor + " allocating its aid by country or region?")
-st.write("The size of the arrows represents the amount of aid allocated to each recipient. The color of the arrows represents the sector of the aid. The size of the nodes represents the total amount of aid received by each recipient. The color of the nodes represents the region of the recipient.")
 
 fig = go.Figure(data=[go.Treemap(
     labels=labels,
