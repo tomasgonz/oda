@@ -14,4 +14,10 @@ from paises import Groups
 import urllib
 import importlib
 
-st.sidebar.success("Welcome to the ODA explorer. Created by Tomas Gonzalez. Send me comments to tomas@tomasgonzalez.net")
+st.set_page_config(layout="wide")
+st.title("ODA Dashboard")
+st.subheader("Who gives what to whom.")
+st.write(""" This page is developed to explore the datasets made publicly available by the OECD at https://stats.oecd.org. 
+    The code is available at https://github.com/tomasgonz/oda and  you can download and modify it as you wish.
+    """)
+st.sidebar.success("Welcome to the ODA explorer. Created by Tomas Gonzalez. Contact me at tomas@tomasgonzalez.net. Use the options above to navigate through the various sections.")
