@@ -10,18 +10,27 @@ import plotly.graph_objects as go
 import random
 import urllib
 import importlib
+from data import get_oda_sectors
 
 st.set_page_config(layout="wide")
 
-data = pd.DataFrame()
+data = get_oda_sectors()
 
-data = pd.read_csv(os.path.join(os.path.dirname(__file__), "table5_Data.csv"), encoding = "ISO-8859-1")
+all_sectors = data['SECTOR'].unique()
+all_sectors_descriptions = data['Sector'].unique()
 
-sectors = [100, 200, 215, 300, 400, 500, 600, 700, 998]
+odd_sectors = []
+even_sectors = []
 
-data['Sector'].unique()
+for i in all_sectors:
+    if i % 2 == 1:
+        odd_sectors.append(i)
+    else:
+        even_sectors.append(i)
 
-data = data[data['Year'] >= 1990]
+sectors = odd_sectors
+
+data = data[data['Year'] <= 2020]
 
 years = data['Year'].unique()
 
@@ -33,12 +42,17 @@ all_sectors = data['Sector'].unique()
 all_donors = data['Donor'].unique()
 
 all_donors = np.append(all_donors, "all donors")
+all_sectors_descriptions = np.insert(all_sectors, 0, "all sectors")
 
 selected_donor = st.sidebar.selectbox('Donor', all_donors)
-
 if selected_donor:
     if selected_donor != "all donors":
         data = data[data['Donor'].isin([selected_donor])]
+
+selected_sectors = st.sidebar.selectbox('Sector', all_sectors_descriptions)
+if selected_sectors:
+    if selected_sectors != "all sectors":
+        data = data[data['Sector'] == selected_sectors]
 
 # Data definitions and header
 
