@@ -29,8 +29,10 @@ data = data[data['Year'] == 2020]
 data.sort_values(by=['Value'], inplace=True, ascending=False)
 
 table1_1010 = data[data['TRANSACTYPE'] == 1010]
+table1_1010_grouped = table1_1010.groupby(['Donor'])['Value'].sum().reset_index()
+table1_1010_grouped.sort_values(by=['Value'], inplace=True, ascending=False)
 
-fig_yearly = go.Figure(data=go.Bar(x=table1_1010['Donor'], y=table1_1010['Value']))
+fig_yearly = go.Figure(data=go.Bar(x=table1_1010_grouped['Donor'], y=table1_1010_grouped['Value']))
 
 fig_yearly.update_layout(title='ODA (IA+IB) on', xaxis_title='Year', yaxis_title='USD, constant prices')
 st.plotly_chart(fig_yearly, use_container_width=True)

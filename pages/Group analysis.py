@@ -30,8 +30,7 @@ if selected_donor != "all donors":
 
 def get_trace(data, name):
     return go.Scatter(x=data['Year'], y=data['Value'], name=name)
-
-
+    
 g = Groups()
 
 fig_groups = go.Figure()
@@ -50,7 +49,6 @@ if selected_groups:
 for dg in data_groups: 
     fig_groups.add_trace(get_trace(dg['data'].groupby(['Year'], as_index = False)['Value'].sum(), dg['acronym']))
 
-    
 fig_groups.update_layout(title='ODA to Developing Countries', xaxis_title='Year', 
     yaxis_title='ODA (USD)', height=600)
 
@@ -59,6 +57,7 @@ st.plotly_chart(fig_groups, use_container_width=True)
 for dg in data_groups:
     fig_group = go.Figure()
     data = dg['data']
+    data = data[data['Year'] == 2020]
     data.sort_values(by=['Value'], inplace=True, ascending=False)
     fig_group = go.Figure(data=go.Bar(x=data['Recipient'], y=data['Value']))
 
