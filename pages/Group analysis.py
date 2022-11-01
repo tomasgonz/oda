@@ -34,7 +34,7 @@ def get_trace(data, name):
 
 g = Groups()
 
-fig_yearly = go.Figure()
+fig_groups = go.Figure()
 
 groups = [gr['acronym'] for gr in g]
 
@@ -46,12 +46,21 @@ if selected_groups:
         group_countries = g.get_group(gr)['names']
         group_countries_and_aliases = get_alias(group_countries)            
         data_groups.append({'acronym':gr, 'data':data[data['Recipient'].isin(group_countries_and_aliases)]})
-        
-
+       
 for dg in data_groups: 
-    fig_yearly.add_trace(get_trace(dg['data'].groupby(['Year'], as_index = False)['Value'].sum(), dg['acronym']))
+    fig_groups.add_trace(get_trace(dg['data'].groupby(['Year'], as_index = False)['Value'].sum(), dg['acronym']))
 
-fig_yearly.update_layout(title='ODA to Developing Countries', xaxis_title='Year', 
+    
+fig_groups.update_layout(title='ODA to Developing Countries', xaxis_title='Year', 
     yaxis_title='ODA (USD)', height=600)
 
-st.plotly_chart(fig_yearly, use_container_width=True)
+st.plotly_chart(fig_groups, use_container_width=True)
+
+for dg in data_groups:
+    fig_group = go.Figure()
+    data = dg['data']
+    data.sort_values(by=['Value'], inplace=True, ascending=False)
+    fig_group = go.Figure(data=go.Bar(x=data['Recipient'], y=data['Value']))
+
+    fig_group.update_layout(title=dg['acronym'], xaxis_title='Year', yaxis_title='USD, constant prices')
+    st.plotly_chart(fig_group, use_container_width=True)
