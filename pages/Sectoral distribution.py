@@ -116,5 +116,3 @@ fig = go.Figure(data=[go.Sankey(
 fig.update_layout(height=1000)
 
 st.plotly_chart(fig, font_size=10, use_container_width=True, height=1000)
-
-st.dataframe(data_2020[['Donor', 'Sector', "Value"]].sort_values(by=['Value'], ascending=False), use_container_width=True)

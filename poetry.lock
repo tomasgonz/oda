@@ -244,7 +244,7 @@ pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
 
 [[package]]
 name = "paises"
-version = "0.2.1"
+version = "0.2.2"
 description = ""
 category = "main"
 optional = false
@@ -412,7 +412,7 @@ six = ">=1.5"
 
 [[package]]
 name = "pytz"
-version = "2022.5"
+version = "2022.6"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
@@ -815,8 +815,8 @@ packaging = [
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
 ]
 paises = [
-    {file = "paises-0.2.1-py3-none-any.whl", hash = "sha256:75321869ca9d1762e45c6f13acb5160e870c781601122375963b016a025966c5"},
-    {file = "paises-0.2.1.tar.gz", hash = "sha256:06967402f0c1211b7d9b6889d3dc98af8b2622a8421e1a9ac658ed3581735afa"},
+    {file = "paises-0.2.2-py3-none-any.whl", hash = "sha256:b8436dfd13e8fc53bfb5838a827101594a211f8b639184abad99769221c92db3"},
+    {file = "paises-0.2.2.tar.gz", hash = "sha256:21637728eb3178efabfb7acf2cb0c8ad9a8ce5cbcede2f4f1359b63611d38315"},
 ]
 pandas = [
     {file = "pandas-1.5.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0a78e05ec09731c5b3bd7a9805927ea631fe6f6cb06f0e7c63191a9a778d52b4"},
@@ -1013,8 +1013,8 @@ python-dateutil = [
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
 pytz = [
-    {file = "pytz-2022.5-py2.py3-none-any.whl", hash = "sha256:335ab46900b1465e714b4fda4963d87363264eb662aab5e65da039c25f1f5b22"},
-    {file = "pytz-2022.5.tar.gz", hash = "sha256:c4d88f472f54d615e9cd582a5004d1e5f624854a6a27a6211591c251f22a6914"},
+    {file = "pytz-2022.6-py2.py3-none-any.whl", hash = "sha256:222439474e9c98fced559f1709d89e6c9cbf8d79c794ff3eb9f8800064291427"},
+    {file = "pytz-2022.6.tar.gz", hash = "sha256:e89512406b793ca39f5971bc999cc538ce125c0e51c27941bef4568b460095e2"},
 ]
 pytz-deprecation-shim = [
     {file = "pytz_deprecation_shim-0.1.0.post0-py2.py3-none-any.whl", hash = "sha256:8314c9692a636c8eb3bda879b9f119e350e93223ae83e70e80c31675a0fdc1a6"},

@@ -93,8 +93,6 @@ fig.update_layout(height=800)
 
 st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
 
-st.dataframe(data_2020[['Donor', 'Recipient', 'Value']], use_container_width=True)
-
 st.header("How is " + selected_donor + " allocating its aid by country?")
 st.write("The same as above, but excluding country group aggregates and showing only individual countries. Note that for some countries a substantial volume of aid is reported as unspecified.")
 
@@ -121,8 +119,6 @@ fig = go.Figure(data=[go.Treemap(
 fig.update_layout(height=800)
 
 st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
-
-st.dataframe(data[['Donor', 'Recipient', 'Value']], use_container_width=True)
 
 if selected_recipient == 'all recipients':
     st.stop()
@@ -177,5 +173,3 @@ fig = go.Figure(data=[go.Sankey(
 fig.update_layout(height=1000)
 
 st.plotly_chart(fig, font_size=10, use_container_width=True, height=1000)
-
-st.dataframe(data_2020[['Donor', 'Recipient', "Value"]].sort_values(by=['Value'], ascending=False), use_container_width=True)
