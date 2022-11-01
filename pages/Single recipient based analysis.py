@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import random
 from paises import Countries
 from paises import Groups
+from paises.alias import get_alias
 import urllib
 import importlib
 from data import get_oda_recipients
@@ -77,7 +78,9 @@ OECD (2022), "Data warehouse", OECD.Stat (database), https://doi.org/10.1787/dat
 # 2020 - Recipients
 # Data LDCs we get here before we filter for the selected recipient
 ldcs = g.get_group('LDCs')
-data_ldcs = data_2020[data_2020['Recipient'].isin(ldcs['names'])]
+ldcs_and_aliases = get_alias(ldcs['names'])
+
+data_ldcs = data_2020[data_2020['Recipient'].isin(ldcs_and_aliases)]
 
 data_2020 = data_2020[data_2020['Recipient'] == selected_recipient]
 data_2020 = data_2020[~data_2020['Donor'].str.contains('Official Donors')]
@@ -114,12 +117,12 @@ fig.update_layout(height=1000)
 
 st.plotly_chart(fig, font_size=10, use_container_width=True, height=1000)
 
-st.write(selected_recipient + " is part of the following political and economic groups ")
+if selected_recipient in ldcs_and_aliases:
 
-st.subheader(selected_recipient + " is the number " + str(data_ldcs[data_ldcs['Recipient'] == selected_recipient].index[0]) + " topmost recipient of " + selected_series + " in 2020 in the group of LDCs")
+    st.write(selected_recipient + " is part of the following political and economic groups ")
 
-ldc_sum = data_ldcs['Value'].sum()
+    ldc_sum = data_ldcs['Value'].sum()
 
-selected_sum = data_ldcs[data_ldcs['Recipient'] == selected_recipient]['Value'].sum()
+    selected_sum = data_ldcs[data_ldcs['Recipient'] == selected_recipient]['Value'].sum()
 
-st.write(selected_recipient + " represents " + str((selected_sum / ldc_sum).round(2)*100) +  " per cent of " + selected_series + " for the LDCs")
+    st.write(selected_recipient + " represents " + str((selected_sum / ldc_sum).round(2)*100) +  " per cent of " + selected_series + " for the LDCs")

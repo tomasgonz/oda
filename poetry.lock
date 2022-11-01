@@ -244,7 +244,7 @@ pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
 
 [[package]]
 name = "paises"
-version = "0.2.2"
+version = "0.2.3"
 description = ""
 category = "main"
 optional = false
@@ -815,8 +815,8 @@ packaging = [
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
 ]
 paises = [
-    {file = "paises-0.2.2-py3-none-any.whl", hash = "sha256:b8436dfd13e8fc53bfb5838a827101594a211f8b639184abad99769221c92db3"},
-    {file = "paises-0.2.2.tar.gz", hash = "sha256:21637728eb3178efabfb7acf2cb0c8ad9a8ce5cbcede2f4f1359b63611d38315"},
+    {file = "paises-0.2.3-py3-none-any.whl", hash = "sha256:a01b8cbdecb8e91ad063c2fe56d73fe33c0735471e9e4221dbce99f4009e21a5"},
+    {file = "paises-0.2.3.tar.gz", hash = "sha256:b08864dec13241f1420596ca19ad387c0540667a80606d052639afee99973292"},
 ]
 pandas = [
     {file = "pandas-1.5.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0a78e05ec09731c5b3bd7a9805927ea631fe6f6cb06f0e7c63191a9a778d52b4"},
