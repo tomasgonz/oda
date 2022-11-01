@@ -23,6 +23,7 @@ st.header("ODA providers in 2020")
 data = data[data['Amount type'] == 'Constant Prices']
 
 data = data[~data['Donor'].str.contains('DAC')]
+data = data[~data['Donor'].str.contains('G7')]
 
 data = data[data['Year'] == 2020]
 
@@ -32,45 +33,41 @@ table1_1010 = data[data['TRANSACTYPE'] == 1010]
 table1_1010_grouped = table1_1010.groupby(['Donor'])['Value'].sum().reset_index()
 table1_1010_grouped.sort_values(by=['Value'], inplace=True, ascending=False)
 
+st.header("Flows of aid from donors to recipients in 2020")
+
 fig_yearly = go.Figure(data=go.Bar(x=table1_1010_grouped['Donor'], y=table1_1010_grouped['Value']))
 
-fig_yearly.update_layout(title='ODA (IA+IB) on', xaxis_title='Year', yaxis_title='USD, constant prices')
+fig_yearly.update_layout(title='Flows of aid in 2020', xaxis_title='Year', yaxis_title='USD')
 st.plotly_chart(fig_yearly, use_container_width=True)
 
 donors = data['Donor'].unique()
 selected_donor = st.sidebar.selectbox('Select a donor', donors)
+data = data[data['Donor'] == selected_donor]
 
-transacts_bilateral = [1100, 1210, 1211, 1212, 1213, 1214, 1220, 1230, 1310, 1320, 1410, 1420, 1500, 1600, 1700, 1810, 1820, 1900 ]
+fund_flows = data['Fund flows'].unique()
+selected_fund_flow = st.sidebar.selectbox('Select a fund flow', fund_flows)
+data = data[data['Fund flows'] == selected_fund_flow]
 
-transacts_multilateral = [2101, 2102, 2103, 2104, 2105,2106,2107,2108,2110]
+data = data[~data['Aid type'].str.contains('GNI')]
 
-transacts_debt = [301, 295]
 
-transacts_inv = [340, 345, 751, 359]    
+labels = data['Aid type'].unique().tolist()
 
-def get_fig_sector(transacts):
-    filtered_data = data[data['TRANSACTYPE'].isin(transacts)]
-    filtered_data = filtered_data[filtered_data['Year'] == 2020].groupby(['Aid type'])['Value'].sum().reset_index()
-    
-    fig = go.Figure(data=go.Pie(labels=filtered_data['Aid type'], values=filtered_data['Value']))
+labels
 
-    return fig, filtered_data
+parents = [selected_donor, "V. Net Private Grants (V.1 minus V.2)"]
 
-fig = get_fig_sector(transacts_bilateral)[0]
-fig.update_layout(title='ODA (IA) on', xaxis_title='Year', yaxis_title='USD, constant prices', showlegend=False, height=800)
-fig.update_traces(textposition='inside', textinfo='percent+label')
-st.plotly_chart(fig, use_container_width=True)
+data
 
-fig = get_fig_sector(transacts_multilateral)[0]
-fig.update_traces(textposition='inside', textinfo='percent+label')
-fig.update_layout(title='ODA (IB) on', xaxis_title='Year', yaxis_title='USD, constant prices', showlegend=False, height=800)
-st.plotly_chart(fig, use_container_width=True)
+fig = go.Figure(data=[go.Treemap(
+    labels=labels,
+    parents=parents,
+    values=data['Value']
+)])
 
-fig = get_fig_sector(transacts_inv)[0]
-fig.update_traces(textposition='inside', textinfo='percent+label')
-fig.update_layout(title='ODA (Inv) on', xaxis_title='Year', yaxis_title='USD, constant prices', showlegend=False, height=800)
+fig.update_layout(height=800)
 
 st.plotly_chart(fig, use_container_width=True)
 
-
+data
 

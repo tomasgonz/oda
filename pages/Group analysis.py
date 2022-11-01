@@ -30,7 +30,7 @@ if selected_donor != "all donors":
 
 def get_trace(data, name):
     return go.Scatter(x=data['Year'], y=data['Value'], name=name)
-    
+
 g = Groups()
 
 fig_groups = go.Figure()
@@ -46,13 +46,28 @@ if selected_groups:
         group_countries_and_aliases = get_alias(group_countries)            
         data_groups.append({'acronym':gr, 'data':data[data['Recipient'].isin(group_countries_and_aliases)]})
        
+
+st.sidebar.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
+
+This app is based on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
+
+# ODA evolution
+st.header("An overview of the distribution of aid by group of countries")
+
+st.write("""Distribution of net official development assistance (ODA) is defined as geographical aid allocations. 
+Net ODA may be distributed by income group (least developed countries, other low-income countries, lower middle-income countries, upper middle-income countries, unallocated and more advanced developing countries and territories) or by geography (sub-Saharan Africa, South and Central Asia, other Asia and Oceania, Middle East and North Africa, Latin America and the Caribbean, Europe, and unspecified). The OECD Development Assistance Committee's "List of ODA Recipients" shows developing countries and territories eligible for ODA. The list is revised every three years. It is designed for statistical purposes, not as guidance for aid distribution or for other preferential treatment. 
+In particular, geographical aid allocations are national policy decisions and responsibilities.""")
+
+
 for dg in data_groups: 
     fig_groups.add_trace(get_trace(dg['data'].groupby(['Year'], as_index = False)['Value'].sum(), dg['acronym']))
 
-fig_groups.update_layout(title='ODA to Developing Countries', xaxis_title='Year', 
-    yaxis_title='ODA (USD)', height=600)
-
-st.plotly_chart(fig_groups, use_container_width=True)
+if selected_groups:
+    fig_groups.update_layout(title='ODA to Developing Countries', xaxis_title='Year', 
+        yaxis_title='ODA (USD)', height=600)
+    st.plotly_chart(fig_groups, use_container_width=True)
+else:
+    st.write("Select a group to see the distribution of aid")
 
 for dg in data_groups:
     fig_group = go.Figure()

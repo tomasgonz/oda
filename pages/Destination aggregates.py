@@ -42,11 +42,19 @@ selected_recipient = st.sidebar.selectbox('Select recipient', recipients)
 if selected_recipient != "all recipients":
     data_selected_donor = data_selected_donor[data_selected_donor['Recipient'] == selected_recipient]
 
-# ODA evolution
-st.header("An overview of the distribution of aid of " + selected_donor)
+st.sidebar.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
 
-st.write("The chart below represets " + selected_series +
-     " from " + selected_donor + " various groups of developing countries as reported to the DAC. The data is extracted from the DAC Geobook.")
+This app is based on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
+
+# ODA evolution
+st.header("An overview of the distribution of aid")
+
+st.write("""Distribution of net official development assistance (ODA) is defined as geographical aid allocations. 
+Net ODA may be distributed by income group (least developed countries, other low-income countries, lower middle-income countries, upper middle-income countries, unallocated and more advanced developing countries and territories) or by geography (sub-Saharan Africa, South and Central Asia, other Asia and Oceania, Middle East and North Africa, Latin America and the Caribbean, Europe, and unspecified). The OECD Development Assistance Committee's "List of ODA Recipients" shows developing countries and territories eligible for ODA. The list is revised every three years. It is designed for statistical purposes, not as guidance for aid distribution or for other preferential treatment. 
+In particular, geographical aid allocations are national policy decisions and responsibilities.""")
+
+st.write("The chart below represets '" + selected_series +
+     "' from '" + selected_donor + "' various groups of developing countries as reported to the DAC. The data is extracted from the DAC Geobook.")
 
 fig_yearly = go.Figure()
 
@@ -66,6 +74,8 @@ fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipien
 
 if selected_recipient:
     fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == selected_recipient], selected_recipient))
+
+st.header("Aggregate aid to developing countries")
 
 fig_yearly.update_layout(title='ODA to Developing Countries', xaxis_title='Year', 
     yaxis_title='ODA (USD)', height=600)

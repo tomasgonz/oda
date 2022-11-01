@@ -36,4 +36,7 @@ st.write(""" This page is developed to explore the datasets made publicly availa
     """)
 
 st.sidebar.success("Welcome to the ODA explorer. Use the options above to navigate through the various sections.")
-st.sidebar.caption("Created by Tomas Gonzalez. Contact me at tomas@tomasgonzalez.net")
+
+st.sidebar.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
+
+This app is based on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
