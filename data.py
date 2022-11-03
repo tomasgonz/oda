@@ -7,3 +7,6 @@ def get_oda_volume():
 
 def get_oda_sectors(): 
     return load_file("https://datasource.nyc3.digitaloceanspaces.com/TABLE5_export.csv", "TABLE5_export.csv")
+
+def get_crs():
+    return load_file("https://datasource.nyc3.digitaloceanspaces.com/CRS2020data.csv", "CRS2020data.csv")
