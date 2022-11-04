@@ -14,21 +14,6 @@ data = get_oda_sectors()
 all_sectors = data['SECTOR'].unique()
 all_sectors_descriptions = data['Sector'].unique()
 
-all_sectors_ids = []
-
-# This function searchs for parent sectors on the basis of the string
-# passed following the format X.X.x.
-def get_parent_sector(sector):
-    for i in range(len(all_sectors_ids)):
-        if sector in all_sectors_ids[i]:
-            stem = all_sectors_ids[i].split('.')[len(all_sectors_ids[i].split('.'))-2] + "."
-            return all_sectors_ids[i].replace(stem, "")
-    
-    return ""
-
-for s in all_sectors_descriptions:
-    all_sectors_ids.append(s.split(" ")[0])
-
 odd_sectors = []
 even_sectors = []
 
