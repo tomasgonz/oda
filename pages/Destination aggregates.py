@@ -98,12 +98,14 @@ data = data[~data['Recipient'].str.contains('World Bank')]
 data = data[~data['Recipient'].str.contains('Part')]
 data = data[~data['Recipient'].str.contains('unspecified')]
 
-data_2020 = data[data['Year'] == 2020].groupby(['Donor', 'Recipient'], as_index = False).sum()
+data_2020 = data[data['Year'] == 2020].groupby(['Donor', 'Recipient'], as_index = False)['Value'].sum()
 data_2020.sort_values(by=['Value'], inplace=True, ascending=False)
 
 labels = data_2020['Recipient'].unique().tolist()
 
 parents = [selected_donor] * len(labels)
+
+data_2020
 
 fig = go.Figure(data=[go.Treemap(
     labels=labels,
@@ -138,6 +140,8 @@ data_2020 = data_2020[~data_2020['Donor'].str.contains('Official Donors')]
 
 labels = data_2020['Donor'].unique().tolist() + recipients.tolist()
 
+st.dataframe(data_2020)
+st.write("a")
 index_source = []
 for e in data_2020['Donor'].values.tolist():
     index_source.append(labels.index(e))
