@@ -19,13 +19,21 @@ st.set_page_config(layout="wide")
 data = get_crs()
 
 donors = data['DonorName'].unique()
-#series = data['Series'].unique()
-#recipients = data['Recipient'].unique()
 
-#data_selected_donor = data
-
-selected_donor = st.sidebar.selectbox('Select a donor', donors)
+selected_donor = st.sidebar.selectbox('Select a donor', data['DonorName'].unique())
 if selected_donor != "all donors":
         data = data[data['DonorName'] == selected_donor]
+
+selected_recipients = st.sidebar.multiselect('Select recipients', data['RecipientName'].unique())
+if selected_recipients:
+        data = data[data['RecipientName'].isin(selected_recipients)]
+
+flow_names = data['FlowName'].unique()
+selected_flow = st.sidebar.selectbox('Select a flow', flow_names)
+if selected_flow != "all flows":
+        data = data[data['FlowName'] == selected_flow]
+
+sector_names = data['SectorName'].unique()
+purpose_names = data['PurposeName'].unique()
 
 data

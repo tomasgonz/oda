@@ -1,12 +1,27 @@
 import os
-import urllib
+import requests
 import pandas as pd
 import time
+from tqdm import tqdm
 
 def download_file(url, file_name):
-    url = "https://datasource.nyc3.digitaloceanspaces.com/" + file_name
+    url = "https://datasource.nyc3.digitaloceanspaces.com/oecd/" + file_name
     try:
-        urllib.request.urlretrieve(url, "data/" + file_name)
+        response = requests.get(url, stream=True)
+        total_size_in_bytes= int(response.headers.get('content-length', 0))
+        block_size = 8096
+        progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
+        with response as r:
+            r.raise_for_status()
+            with open('data/' + file_name, 'wb') as f:
+                for chunk in r.iter_content(block_size):
+                    progress_bar.update(len(chunk))
+                    f.write(chunk)
+            
+            r.close()
+        
+        progress_bar.close()
+    
     except:
         print("Error downloading file. Please try again later.")
 
@@ -24,6 +39,4 @@ def load_file(url, file_name):
         return pd.read_csv("data/" + file_name)
     else:
         download_file(url, file_name)
-        while not os.path.isfile("data/" + file_name):
-            time.sleep(1)
-        return pd.read_csv(file_name)
+        return pd.read_csv("data/" + file_name)
