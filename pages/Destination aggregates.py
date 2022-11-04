@@ -38,17 +38,14 @@ if selected_series:
 
 recipients =  np.insert(recipients, 0, "all recipients")
 
-selected_recipient = st.sidebar.selectbox('Select recipient', recipients)
-if selected_recipient != "all recipients":
-    data = data[data['Recipient'] == selected_recipient]
+selected_recipient = st.sidebar.multiselect('Select recipient', recipients)
 
 st.sidebar.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
 
 This app is based on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
 
 # ODA evolution
-st.header("An overview of the distribution of aid")
-
+st.header("Distribution of aid by recipient")
 st.write("""Distribution of net official development assistance (ODA) is defined as geographical aid allocations. 
 Net ODA may be distributed by income group (least developed countries, other low-income countries, lower middle-income countries, upper middle-income countries, unallocated and more advanced developing countries and territories) or by geography (sub-Saharan Africa, South and Central Asia, other Asia and Oceania, Middle East and North Africa, Latin America and the Caribbean, Europe, and unspecified). The OECD Development Assistance Committee's "List of ODA Recipients" shows developing countries and territories eligible for ODA. The list is revised every three years. It is designed for statistical purposes, not as guidance for aid distribution or for other preferential treatment. 
 In particular, geographical aid allocations are national policy decisions and responsibilities.""")
@@ -73,7 +70,8 @@ fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'Middle East, Total'], 
 fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'America, Total'], 'America, Total'))
 
 if selected_recipient:
-    fig_yearly.add_trace(get_trace(data[data['Recipient'] == selected_recipient], selected_recipient))
+    for s in selected_recipient:
+        fig_yearly.add_trace(get_trace(data[data['Recipient'] == s], s))
 
 st.header("Aggregate aid to developing countries")
 
@@ -83,12 +81,10 @@ fig_yearly.update_layout(title='ODA to Developing Countries', xaxis_title='Year'
 st.plotly_chart(fig_yearly, use_container_width=True)
 
 # ODA evolution
-st.header("An overview of the distribution of aid")
 
 # 2020
-
-st.header("How is " + selected_donor + " allocating its aid by country?")
-st.write("The same as above, but excluding country group aggregates and showing only individual countries. Note that for some countries a substantial volume of aid is reported as unspecified.")
+st.header(selected_donor + " - allocation of " + selected_series + "  by recipient")
+st.write("The chart below shows reported flows in 2020 to individual countries. Note that for some countries a substantial volume of aid is reported as unspecified.")
 
 data = data[~data['Recipient'].str.contains('Total')]
 data = data[~data['Recipient'].str.contains('regional')]
@@ -105,8 +101,6 @@ labels = data_2020['Recipient'].unique().tolist()
 
 parents = [selected_donor] * len(labels)
 
-data_2020
-
 fig = go.Figure(data=[go.Treemap(
     labels=labels,
     parents=parents,
@@ -117,57 +111,5 @@ fig.update_layout(height=800)
 
 st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
 
-if selected_recipient == 'all recipients':
-    st.stop()
-
-st.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
-
-This app is based on Streamlit and the source code is available at https://github.com/tomasgonz/oda. The source code is free to use, modify and distribute.""")
-
-st.title("Aid (ODA) by sector and donor")
-
-st.write(""" Official Development Assistance (ODA) is defined as those flows to developing countries and multilateral institutions provided by official agencies, including state and local governments, or by their executive agencies, each transaction of which meets the following tests: i) it is administered with the promotion of the economic development and welfare of developing countries as its main objective; and ii) it is concessional in character and conveys a grant element of at least 25 per cent. The data is in millions, current US. 
-
-OECD (2022), "Data warehouse", OECD.Stat (database), https://doi.org/10.1787/data-00900-en (accessed on 12 October 2022). """
-)
-
-# 2020 - Recipients
-data_2020 = data[data['Year'] == 2020].groupby(['Donor', 'Recipient', 'Year'], as_index = False)['Value'].sum()
-
-data_2020 = data_2020[data_2020['Recipient'] == selected_recipient]
-
-data_2020 = data_2020[~data_2020['Donor'].str.contains('Official Donors')]
-
-labels = data_2020['Donor'].unique().tolist() + recipients.tolist()
-
-st.dataframe(data_2020)
-st.write("a")
-index_source = []
-for e in data_2020['Donor'].values.tolist():
-    index_source.append(labels.index(e))
-
-index_destination = []
-for e in data_2020['Recipient'].values.tolist():
-    index_destination.append(labels.index(e))
-
-st.header("How is " + selected_donor + " allocating its aid by recipient in 2020?")
-fig = go.Figure(data=[go.Sankey(
-    node = {
-        'pad' : 15,
-        'thickness' : 20,
-        'line' : {
-            'color' : 'black', 
-            'width' : 0.5
-        },
-        'label' :labels
-    },
-    link = {
-        'source' : index_source,
-        'target' : index_destination,
-        'value' : data_2020['Value']
-    }
-)])
-
-fig.update_layout(height=1000)
-
-st.plotly_chart(fig, font_size=10, use_container_width=True, height=1000)
+st.subheader(selected_series + " - from " + selected_donor + " in 2020.")
+st.table(data_2020[['Recipient', 'Value']])
