@@ -26,21 +26,21 @@ years = data['Year'].unique()
 series = data['Series'].unique()
 recipients = data['Recipient'].unique()
 
-data_selected_donor = data
+data = data
 
 selected_donor = st.sidebar.selectbox('Select a donor', donors)
 if selected_donor != "all donors":
-        data_selected_donor = data_selected_donor[data_selected_donor['Donor'] == selected_donor]
+        data = data[data['Donor'] == selected_donor]
 
 selected_series = st.sidebar.selectbox('Select series', series)
 if selected_series:
-    data_selected_donor = data_selected_donor[data_selected_donor['Series'] == selected_series]
+    data = data[data['Series'] == selected_series]
 
 recipients =  np.insert(recipients, 0, "all recipients")
 
 selected_recipient = st.sidebar.selectbox('Select recipient', recipients)
 if selected_recipient != "all recipients":
-    data_selected_donor = data_selected_donor[data_selected_donor['Recipient'] == selected_recipient]
+    data = data[data['Recipient'] == selected_recipient]
 
 st.sidebar.caption("""Beta ODA explorer development by Tomas Gonzalez using data from the OECD at https://stats.oecd.org/. 
 
@@ -58,22 +58,22 @@ st.write("The chart below represets '" + selected_series +
 
 fig_yearly = go.Figure()
 
-def get_trace(data_selected_donor, name):
-    return go.Scatter(x=data_selected_donor['Year'], y=data_selected_donor['Value'], name=name, fill='tozeroy')
+def get_trace(data, name):
+    return go.Scatter(x=data['Year'], y=data['Value'], name=name, fill='tozeroy')
 
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'Developing Countries, Total'], 
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'Developing Countries, Total'], 
     'Developing Countries, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'LDCs, Total'], 'LDCs, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'Africa, Total'], 'Africa, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'Asia, Total'], 'Asia, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'LMICs, Total'], 'LMICs, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'UMICs, Total'], 'UMICs, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'Europe, Total'], 'Europe, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'Middle East, Total'], 'Middle East, Total'))
-fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == 'America, Total'], 'America, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'LDCs, Total'], 'LDCs, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'Africa, Total'], 'Africa, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'Asia, Total'], 'Asia, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'LMICs, Total'], 'LMICs, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'UMICs, Total'], 'UMICs, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'Europe, Total'], 'Europe, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'Middle East, Total'], 'Middle East, Total'))
+fig_yearly.add_trace(get_trace(data[data['Recipient'] == 'America, Total'], 'America, Total'))
 
 if selected_recipient:
-    fig_yearly.add_trace(get_trace(data_selected_donor[data_selected_donor['Recipient'] == selected_recipient], selected_recipient))
+    fig_yearly.add_trace(get_trace(data[data['Recipient'] == selected_recipient], selected_recipient))
 
 st.header("Aggregate aid to developing countries")
 
@@ -82,26 +82,10 @@ fig_yearly.update_layout(title='ODA to Developing Countries', xaxis_title='Year'
 
 st.plotly_chart(fig_yearly, use_container_width=True)
 
+# ODA evolution
+st.header("An overview of the distribution of aid")
+
 # 2020
-data_2020 = data[data['Year'] == 2020].groupby(['Donor', 'Recipient'], as_index = False).sum()
-data_2020.sort_values(by=['Value'], inplace=True, ascending=False)
-
-labels = data['Recipient'].unique().tolist()
-
-parents = [selected_donor] * len(labels)
-
-st.header("How is " + selected_donor + " allocating its aid by country or region?")
-st.write("The size of the arrows represents the amount of aid allocated to each recipient. The color of the arrows represents the sector of the aid. The size of the nodes represents the total amount of aid received by each recipient. The color of the nodes represents the region of the recipient.")
-
-fig = go.Figure(data=[go.Treemap(
-    labels=labels,
-    parents=parents,
-    values=data['Value']
-)])
-
-fig.update_layout(height=800)
-
-st.plotly_chart(fig, font_size=10, use_container_width=True, height=2000)
 
 st.header("How is " + selected_donor + " allocating its aid by country?")
 st.write("The same as above, but excluding country group aggregates and showing only individual countries. Note that for some countries a substantial volume of aid is reported as unspecified.")
@@ -114,16 +98,17 @@ data = data[~data['Recipient'].str.contains('World Bank')]
 data = data[~data['Recipient'].str.contains('Part')]
 data = data[~data['Recipient'].str.contains('unspecified')]
 
+data_2020 = data[data['Year'] == 2020].groupby(['Donor', 'Recipient'], as_index = False).sum()
 data_2020.sort_values(by=['Value'], inplace=True, ascending=False)
 
-labels = data['Recipient'].unique().tolist()
+labels = data_2020['Recipient'].unique().tolist()
 
 parents = [selected_donor] * len(labels)
 
 fig = go.Figure(data=[go.Treemap(
     labels=labels,
     parents=parents,
-    values=data['Value']
+    values=data_2020['Value']
 )])
 
 fig.update_layout(height=800)
@@ -145,7 +130,6 @@ OECD (2022), "Data warehouse", OECD.Stat (database), https://doi.org/10.1787/dat
 )
 
 # 2020 - Recipients
-
 data_2020 = data[data['Year'] == 2020].groupby(['Donor', 'Recipient', 'Year'], as_index = False)['Value'].sum()
 
 data_2020 = data_2020[data_2020['Recipient'] == selected_recipient]
