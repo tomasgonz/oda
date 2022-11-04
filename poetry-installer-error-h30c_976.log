@@ -1,0 +1,6 @@
+No pyvenv.cfg file
+
+Traceback:
+
+  File "<stdin>", line 919, in main
+  File "<stdin>", line 552, in run
